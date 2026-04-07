@@ -16,4 +16,6 @@ add_executable(cpp_basic main.cpp
         include/array_utils.h
         include/constants.h
         src/module02/utils.cpp
+        src/module01/data_type.cpp
+        include/data_type.h
 )
