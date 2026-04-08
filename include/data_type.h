@@ -7,4 +7,8 @@
 class DataType {
 public:
     static void demoIntegerOverflow();
+    static void demoFloatingPrecision();
+    static void demoTypeConversion();
+    static void demoSizeAndLimits();
+    static void demoBitOperations();
 };
