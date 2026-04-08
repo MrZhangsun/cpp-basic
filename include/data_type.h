@@ -14,4 +14,5 @@ public:
     static void demoCharAndStrings();
     static void demoTypeBestPractices();
     static void demoTypeDeduction();
+    static void applyDataTypeByDemo();
 };
