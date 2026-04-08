@@ -150,9 +150,9 @@ void DataType::demoBitOperations() {
     cout << "\n========== 5. 位操作演示 ==========" << endl;
     unsigned char flags = 0b00000000;  // 二进制字面量 (C++14)
     // 定义标志位
-    const unsigned char READ_BIT   = 0b00000001;  // 位0
-    const unsigned char WRITE_BIT  = 0b00000010;  // 位1
-    const unsigned char EXEC_BIT   = 0b00000100;  // 位2
+    constexpr unsigned char READ_BIT   = 0b00000001;  // 位0
+    constexpr unsigned char WRITE_BIT  = 0b00000010;  // 位1
+    constexpr unsigned char EXEC_BIT   = 0b00000100;  // 位2
 
     cout << "初始值: " << bitset<8>(flags) << " (0)" << endl;
 
@@ -160,5 +160,33 @@ void DataType::demoBitOperations() {
     cout << "初始值：" << bitset<8>(flags) << " (0)" << endl;
 
     flags |= WRITE_BIT;
-    cout << "设置写权限" << bitset<8>(flags) << endl;
+    cout << "设置写权限：" << bitset<8>(flags) << endl;
+
+    // 检查位
+    cout << "有读权限? " << (flags & READ_BIT ? "是" : "否") << endl;
+    cout << "有写权限? " << (flags & WRITE_BIT ? "是" : "否") << endl;
+    cout << "有执行权限? " << (flags & EXEC_BIT ? "是" : "否") << endl;
+
+    // 清除写权限
+    flags &= ~WRITE_BIT; // 0b00000010 -> ~0b00000010 > 0b11111101 & 00000011 = 0b00000001
+    // 清除读权限
+    flags &= ~READ_BIT; // 0b00000001 > ~0b00000001 > 0b11111110 & 0b00000001 = 0b00000000
+
+    // 切换位
+    flags |= EXEC_BIT;
+    flags ^= EXEC_BIT;
+    cout << "切换执行权限: " << bitset<8>(flags) << endl;
+
+    // 移位操作
+    constexpr unsigned int value = 0b00000001;
+    cout << "\n移位操作:" << endl;
+    cout << "1 << 3 = " << (value << 3) << " (二进制: "
+         << bitset<8>(value << 3) << ")" << endl;
+    cout << "16 >> 2 = " << (16 >> 2) << " (二进制: "
+         << bitset<8>(16 >> 2) << ")" << endl;
+}
+
+// 演示char和字符串处理
+void DataType::demoCharAndStrings() {
+
 }

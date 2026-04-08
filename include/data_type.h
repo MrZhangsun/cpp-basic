@@ -11,4 +11,5 @@ public:
     static void demoTypeConversion();
     static void demoSizeAndLimits();
     static void demoBitOperations();
+    static void demoCharAndStrings();
 };

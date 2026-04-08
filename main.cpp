@@ -5,11 +5,12 @@
 #include "include/template.h"
 
 void dataType() {
-    DataType::demoIntegerOverflow();
-    DataType::demoFloatingPrecision();
-    DataType::demoTypeConversion();
-    DataType::demoSizeAndLimits();
-    DataType::demoBitOperations();
+    // DataType::demoIntegerOverflow();
+    // DataType::demoFloatingPrecision();
+    // DataType::demoTypeConversion();
+    // DataType::demoSizeAndLimits();
+    // DataType::demoBitOperations();
+    DataType::demoCharAndStrings();
 }
 
 void templateDemo() {
@@ -26,6 +27,6 @@ void templateDemo() {
 
 int main() {
     dataType();
-    templateDemo();
+    // templateDemo();
     return 0;
 }
