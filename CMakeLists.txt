@@ -18,4 +18,5 @@ add_executable(cpp_basic main.cpp
         src/module02/utils.cpp
         src/module01/data_type.cpp
         include/data_type.h
+        include/template.h
 )
