@@ -307,125 +307,62 @@ void DataType::demoTypeDeduction() {
     cout << "val3: " << typeid(val3).name() << endl;
 }
 
-// 综合应用：模拟银行账户系统
-class BankAccount {
-    int64_t balance; // 使用64位整数防止溢出
-    uint32_t accountId;
-    uint8_t accountType; // 账户类型，1:储蓄 2:支票 3:投资
-    bool isActive;
-    double interestRate; // 年利率
-
-public:
-    // BankAccount(const uint32_t id, const uint8_t type, const double rate) {
-    //     this->account_id = id;
-    //     this->account_type = type;
-    //     this->interest_rate = rate;
-    //     this->balance = 0;
-    //     this->is_active = true;
-    // }
-    /**
-     * 无参构造
-     */
-    BankAccount() = default;
-    /**
-     * 构造函数
-     * @param id 账户ID
-     * @param type 账户类型
-     * @param rate 年利率
-     */
-    BankAccount(const uint32_t id, const uint8_t type, const double rate)
-    : balance(0), accountId(id), accountType(type), isActive(true), interestRate(rate) {}
-
-    /**
-     * 存款
-     * @param amount 金额
-     * @return 是否存储成功
-     */
-    bool deposit(const int64_t amount) {
-        if (amount <= 0 || !isActive) {
-            return false;
-        }
-
-        // 检查溢出
-        if (balance > numeric_limits<int64_t>::max() - amount) {
-            cout << "存储金额过大，存储失败" << endl;
-            return false;
-        }
-
-
-        balance += amount;
-
-        return true;
+/**
+ * 存款
+ * @param amount 金额
+ * @return 是否存储成功
+ */
+bool BankAccount::deposit(const int64_t amount) {
+    if (amount <= 0 || !isActive) {
+        return false;
     }
 
-    /**
-     * 取款
-     * @param amount 金额
-     * @return 是否取款成功
-     */
-    bool withdraw(const int64_t amount) {
-        if (amount <= 0 || !isActive || balance < amount) return false;
-
-        balance -= amount;
-        return true;
+    // 检查溢出
+    if (balance > numeric_limits<int64_t>::max() - amount) {
+        cout << "存储金额过大，存储失败" << endl;
+        return false;
     }
 
-    void addInterest() {
-        const double interest = static_cast<double>(balance) * interestRate / 100.0;
-        const auto interest_int = static_cast<int64_t>(interest);
-        balance += interest_int;
-        cout << "添加利息: " << interest_int << " 元" << endl;
-    }
 
-    void display() const {
-        cout << "\n账户信息:" << endl;
-        cout << "ID: " << accountId << endl;
-        cout << "类型: " << static_cast<int>(accountType) << endl;
-        cout << "余额: " << balance << " 元" << endl;
-        cout << "状态: " << (isActive ? "激活" : "冻结") << endl;
-        cout << "利率: " << interestRate << "%" << endl;
-    }
+    balance += amount;
 
-    /**
-     * 获取余额
-     * @return 余额
-     * [[nodiscard]] 提示调用者：返回值不能被忽略，不影响运行，只是增强代码安全性
-     * 方法签名后的const：保证这个函数不会修改对象，在方法内部不能修改对象的任何信息
-     */
-    [[nodiscard]] int64_t getBalance() const {
-        return balance;
-    }
-};
+    return true;
+}
 
+/**
+ * 取款
+ * @param amount 金额
+ * @return 是否取款成功
+ */
+bool BankAccount::withdraw(const int64_t amount) {
+    if (amount <= 0 || !isActive || balance < amount) return false;
 
-void DataType::applyDataTypeByDemo() {
-    // 2. 综合应用
-    cout << "\n========== 9. 综合应用：银行系统 ==========" << endl;
-    BankAccount account(10086, 1, 3.5);  // 3.5%年利率
-    account.display();
+    balance -= amount;
+    return true;
+}
 
-    cout << "\n模拟交易,存款 10000 元:" << endl;
-    account.deposit(10000);
-    cout << "当前余额: " << account.getBalance() << " 元" << endl;
-    account.withdraw(2500);
-    cout << "取款 2500 元" << endl;
-    cout << "当前余额: " << account.getBalance() << " 元" << endl;
+void BankAccount::addInterest() {
+    const double interest = static_cast<double>(balance) * interestRate / 100.0;
+    const auto interest_int = static_cast<int64_t>(interest);
+    balance += interest_int;
+    cout << "添加利息: " << interest_int << " 元" << endl;
+}
 
-    account.addInterest();
-    cout << "一年后余额: " << account.getBalance() << " 元" << endl;
+void BankAccount::display() const {
+    cout << "\n账户信息:" << endl;
+    cout << "ID: " << accountId << endl;
+    cout << "类型: " << static_cast<int>(accountType) << endl;
+    cout << "余额: " << balance << " 元" << endl;
+    cout << "状态: " << (isActive ? "激活" : "冻结") << endl;
+    cout << "利率: " << interestRate << "%" << endl;
+}
 
-    // 3. 类型选择总结
-    cout << "\n========== 10. 学习要点总结 ==========" << endl;
-    cout << R"(
-        关键要点：
-        1. 整型注意溢出，使用固定宽度类型保证可移植性
-        2. 浮点数不能直接比较相等，需要判断差值
-        3. 有符号与无符号混用会导致意外结果
-        4. size_t 用于数组索引和循环计数器
-        5. 位操作可以高效管理多个布尔标志
-        6. char 既是字符也是小整数，注意符号性
-        7. auto 简化类型声明，但不要过度使用
-        8. 根据需求选择最小够用的类型以节省内存
-    )";
-    cout << "\nDemo 完成！" << endl;
+/**
+ * 获取余额
+ * @return 余额
+ * [[nodiscard]] 提示调用者：返回值不能被忽略，不影响运行，只是增强代码安全性
+ * 方法签名后的const：保证这个函数不会修改对象，在方法内部不能修改对象的任何信息
+ */
+[[nodiscard]] int64_t BankAccount::getBalance() const {
+    return balance;
 }
