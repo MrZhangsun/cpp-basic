@@ -12,4 +12,6 @@ public:
     static void demoSizeAndLimits();
     static void demoBitOperations();
     static void demoCharAndStrings();
+    static void demoTypeBestPractices();
+    static void demoTypeDeduction();
 };

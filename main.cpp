@@ -10,7 +10,9 @@ void dataType() {
     // DataType::demoTypeConversion();
     // DataType::demoSizeAndLimits();
     // DataType::demoBitOperations();
-    DataType::demoCharAndStrings();
+    // DataType::demoCharAndStrings();
+    // DataType::demoTypeBestPractices();
+    DataType::demoTypeDeduction();
 }
 
 void templateDemo() {

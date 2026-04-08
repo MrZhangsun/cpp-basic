@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iomanip> // input-output manipulators（输入输出格式控制工具）
 #include <limits>
+#include <locale>
 #include "../../include/data_type.h"
 
 using namespace std;
@@ -188,5 +189,122 @@ void DataType::demoBitOperations() {
 
 // 演示char和字符串处理
 void DataType::demoCharAndStrings() {
+    cout << "\n========== 6. 字符类型详解 ==========" << endl;
 
+    // char 类型
+    constexpr char c = 'A';
+    cout << "char '" << c << "'的ASCII码：" << static_cast<int>(c) << endl;
+
+    // char 作为整数使用
+    for (char ch = 'A'; ch <= 'Z'; ch++) {
+        cout << ch << " ";
+    }
+    cout << endl;
+
+    // 转义字符
+    cout << "转义字符：\n\t\"Hello\"\n\t\"World\"\n\\n" << endl;
+
+    // 宽字符（占用多个字节的字符）
+    std::locale::global(std::locale(""));
+    std::wcout.imbue(std::locale());
+
+    constexpr wchar_t wc = L'中';
+    wcout << L"宽字符: " << wc << L"(代码点: " << static_cast<int>(wc) << L")" << endl;
+
+    // char16_t 和 char32_t
+    char16_t c16 = u'中';
+    char32_t c32 = U'中';
+    cout << "char16_t大小：" << sizeof(char16_t) << " 字节" << endl;
+    cout << "char32_t大小：" << sizeof(char32_t) << " 字节" << endl;
+
+    // 字符串字面量
+    constexpr char* str = "Hello, World!";
+    constexpr wchar_t* wstr = L"你好，世界";
+    // auto 的作用是：
+    // 👉 让编译器自动推导变量类型，避免手写复杂类型
+    constexpr auto u16str = u"你好，世界";
+    const char32_t* u32str = U"Hello UTF-32";
+    cout << "UTF-8字符串: " << str << endl;
 }
+
+// 实际应用：类型选择的最佳实践
+void DataType::demoTypeBestPractices() {
+    cout << "\n========== 7. 类型选择最佳实践 ==========" << endl;
+    // 1. 循环计数器 - 使用size_t
+    int arr[] = {1, 2, 3, 4, 5};
+    // size_t 是一个无符号整型，用来表示大小，位置，索引等等。
+    for (size_t i = 0; i < std::size(arr); i++) {
+        cout << "the " << i << "个元素：" << arr[i] << " ";
+    }
+    cout << endl;
+
+    // 2. 精确大小的需求 - 使用固定宽度类型
+    cout << "2. 网络协议/文件格式: ";
+    constexpr uint32_t package_id = 0x12345678;
+    constexpr uint16_t package_length = 0x1234;
+    cout << "包ID: " << hex << package_id << ", 包长度: " << dec << package_length << endl;
+
+    // 3. 布尔标志 - 使用bool
+    constexpr bool is_valid = true;
+    constexpr bool is_processed = false;
+    cout << "3. 布尔标志: " << boolalpha << is_valid << "/ " <<is_processed << noboolalpha << endl;
+
+    // 4. 大量浮点运算 - double精度足够
+    const double* large_array = new double[1000000]; // 分配在堆内存中
+    cout << "4. 科学计算：double数组1000000个元素" << endl;
+    delete[] large_array;
+
+    // 5. 节省内存 - 使用最小够用的类型
+    struct SmallStruct {
+        uint8_t age;        // 0-255足够
+        uint16_t score;     // 0-65535足够
+        bool passed;        // 布尔值
+    };
+
+    SmallStruct small_struct = {18, 90, true};
+    cout << "5. 内存优化：SmallStruct大小=" << sizeof(SmallStruct) << "字节, 实例化对象大小：" << sizeof(small_struct) << endl;
+}
+
+// 高级：类型推导和auto
+void DataType::demoTypeDeduction() {
+    cout << "\n========== 8. 类型推导 ==========" << endl;
+    auto x = 10;
+    auto y = 3.14;
+    auto z = 3.14f;
+    auto b = true;
+    auto c = 'a';
+
+    cout << "auto x = 10; x的类型是：" << typeid(x).name() << endl;
+    cout << "auto y = 3.14; y的类型是：" << typeid(y).name() << endl;
+    cout << "auto z = 3.14f; z的类型是：" << typeid(z).name() << endl;
+    cout << "auto b = true; b的类型是：" << typeid(b).name() << endl;
+    cout << "auto c = 'a'; c的类型是：" << typeid(c).name() << endl;
+
+    /*
+     * decltype 的作用是：获取一个表达式的“精确类型”（包括引用和 const）
+     * 和 auto 的本质区别（核心）：
+     * auto会：
+     *   去掉 const
+     *   去掉引用
+     */
+    constexpr int value = 42;
+    /*
+     * 指针和引用的区别：
+     * 指针：存储的是内存地址，是一个变量，占用内存，可以为空，可以改变值（指向不同的内存地址）；
+     * 引用：是变量的别名，不是变量，不占内存，必须初始化；
+     */
+    const int& ref = value; // 创建了变量value的一个别名，引用
+    decltype(ref) result = value; // 获取变量value的精确类型， decltype(ref) = const int&, 作为result的类型
+    cout << "decltype推导：" << typeid(result).name() << endl;
+
+    // auto 和 const
+    constexpr int const_val = 100;
+    auto val1 = const_val; // int (去掉const)
+    const auto val2 = const_val; // const int
+    auto& val3 = const_val; // const int&
+    cout << "val1: " << typeid(val1).name() << endl;
+    cout << "val2: " << typeid(val2).name() << endl;
+    cout << "val3: " << typeid(val3).name() << endl;
+}
+
+// 综合应用：模拟银行账户系统
